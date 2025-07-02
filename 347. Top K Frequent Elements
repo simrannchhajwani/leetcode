@@ -1,0 +1,41 @@
+class Solution {
+public:
+    // Function to return the top k frequent elements from the input vector 'nums'
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        
+        // Min-heap (priority queue) to store {frequency, number} pairs
+        // greater<pair<int,int>> makes it a min-heap (smallest frequency at top)
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+
+        // Hash map to count the frequency of each number in 'nums'
+        unordered_map<int, int> cnt;
+
+        // Loop through all numbers in 'nums' and count their frequencies
+        for (auto num : nums) cnt[num]++;
+
+        // Loop through each key-value (number, frequency) in the map
+        for (auto kv : cnt) {
+            // Push a pair (frequency, number) into the min-heap
+            pq.push({kv.second, kv.first});
+            
+            // If the heap size exceeds 'k', remove the smallest frequency element
+            // This ensures only the top k frequent elements remain in the heap
+            while (pq.size() > k) pq.pop();
+        }
+
+        // Vector to store the final result (top k frequent numbers)
+        vector<int> res;
+
+        // Extract elements from the heap (which contains k most frequent elements)
+        while (!pq.empty()) {
+            // Add the number (second part of pair) to the result
+            res.push_back(pq.top().second);
+            
+            // Remove the top element from the heap
+            pq.pop();
+        }
+
+        // Return the result vector containing the top k frequent numbers
+        return res;
+    }
+};
